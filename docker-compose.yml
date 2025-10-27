@@ -1,0 +1,26 @@
+
+services:
+  database:
+    image: cesar878/mariadb-unir:10.3.35
+    platform: linux/amd64
+    container_name: mysql
+    ports:
+      - "3306:3306"
+
+  cms:
+    image: cesar878/drupal-unir:10.4.7
+    platform: linux/amd64
+    container_name: drupal
+    depends_on:
+      - database  
+
+  web_server:
+    image: cesar878/nginx-drupal:latest
+    platform: linux/amd64
+    container_name: nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - cms
+volumes:
+  drupal_files:
