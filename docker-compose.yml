@@ -3,24 +3,26 @@ services:
   database:
     image: cesar878/mariadb-unir:10.3.35
     platform: linux/amd64
-    container_name: mysql
+    container_name: mysql-container
     ports:
       - "3306:3306"
+    volumes:
+      - ./drupal_backup.sql:/docker-entrypoint-initdb.d/drupal_backup.sql
 
-  cms:
+  drupal:
     image: cesar878/drupal-unir:10.4.7
     platform: linux/amd64
-    container_name: drupal
+    container_name: drupal-container
     depends_on:
       - database  
 
   web_server:
     image: cesar878/nginx-drupal:latest
     platform: linux/amd64
-    container_name: nginx
+    container_name: web-server-container
     ports:
       - "80:80"
     depends_on:
-      - cms
+      - drupal
 volumes:
   drupal_files:
