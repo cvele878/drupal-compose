@@ -8,11 +8,15 @@ services:
       - "3306:3306"
     volumes:
       - ./drupal_backup.sql:/docker-entrypoint-initdb.d/drupal_backup.sql
+    networks:
+      - drupal-network  
 
   drupal:
     image: cesar878/drupal-unir:10.4.7
     platform: linux/amd64
     container_name: drupal-container
+    networks:
+      - drupal-network  
     depends_on:
       - database  
 
@@ -20,9 +24,15 @@ services:
     image: cesar878/nginx-drupal:latest
     platform: linux/amd64
     container_name: web-server-container
+    networks:
+      - drupal-network
     ports:
       - "80:80"
     depends_on:
       - drupal
+networks:
+  drupal-network:
+    name: drupal-network
+    driver: bridge
 volumes:
   drupal_files:
